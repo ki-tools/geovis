@@ -1,0 +1,17 @@
+dependencies:
+- name: geovis-lib
+  version: 0.0.1
+  src: htmlwidgets/lib/geovis_widget
+  script: geovis.min.js
+  stylesheet: geovis.min.css
+- name: mapbox
+  version: 0.49.0
+  src: htmlwidgets/lib/mapbox
+  script: assembly.js
+  stylesheet:
+      - assembly.min.css
+      - mapbox-gl.css
+
+# wget https://api.mapbox.com/mapbox-assembly/v0.23.1/assembly.min.css
+# wget https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css
+# wget https://api.mapbox.com/mapbox-assembly/v0.23.1/assembly.js

@@ -1,0 +1,5 @@
+^_ignore
+^.*\.Rproj$
+^\.Rproj\.user$
+^.lintr
+^.*.code-workspace
