@@ -47,7 +47,7 @@ get_geo_data <- function(countries,
 print.geovis_geo <- function(x, ...) {
   message("geovis geographic boundaries object")
   if (!is.null(x$country))
-message("  ", nrow(x$country), " countries")
+  message("  ", nrow(x$country), " countries")
   if (!is.null(x$state))
     message("  ", nrow(x$state), " states")
   if (!is.null(x$muni))
