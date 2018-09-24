@@ -8,5 +8,12 @@ License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: htmlwidgets,
-    digest
+    jsonlite,
+    rgdal,
+    sp,
+    rnaturalearth,
+    rnaturalearthdata,
+    htmltools,
+    rnaturalearthhires
 RoxygenNote: 6.1.0
+Suggests: brazilmunis

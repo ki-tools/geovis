@@ -2,15 +2,24 @@
 % Please edit documentation in R/geovis.R
 \name{geovis}
 \alias{geovis}
-\title{Generate a geovis output}
+\title{Create a geovis visualization}
 \usage{
-geovis(width = NULL, height = NULL)
+geovis(geo, path = NULL, country_data = NULL, state_data = NULL,
+  muni_data = NULL, var_info = NULL)
 }
 \arguments{
-\item{width}{width of output}
+\item{geo}{an object returned from \code{\link{get_geo_data}}}
 
-\item{height}{height of output}
+\item{path}{where to place the widget}
+
+\item{country_data}{data to use at the country level}
+
+\item{state_data}{data to use at the state level}
+
+\item{muni_data}{data to use at the municipality level}
+
+\item{var_info}{information about variables (TODO)}
 }
 \description{
-Generate a geovis output
+Create a geovis visualization
 }
