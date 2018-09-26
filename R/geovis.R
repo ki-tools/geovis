@@ -5,14 +5,23 @@
 #' @param country_data data to use at the country level
 #' @param state_data data to use at the state level
 #' @param muni_data data to use at the municipality level
-#' @param var_info information about variables (TODO)
+#' @param var_info information about variables
+#' @param width width of visualization
+#' @param height height of visualization
 #' @importFrom sp CRS
 #' @importFrom rgdal writeOGR
 #' @importFrom jsonlite toJSON
 #' @export
-geovis <- function(geo, path = NULL,
+geovis <- function(geo, name = "", path = NULL,
   country_data = NULL, state_data = NULL, muni_data = NULL,
-  var_info = NULL
+  var_info = NULL,
+  view_level = "world",
+  view_country_code = "",
+  view_state_code = "",
+  default_var = NULL,
+  map_style = "mapbox://styles/rhafen/cjlqs6rq47uen2speg0aasu3a",
+  width = NULL,
+  height = NULL
 ) {
   if (!inherits(geo, "geovis_geo"))
     stop("'geo' argument must be generated from get_geo_data().",
@@ -30,7 +39,7 @@ geovis <- function(geo, path = NULL,
 
     pth <- check_path(path, "data")
     # out <- as.character(geojson::as.geojson(geo$country))
-    out <- getgeojson(geo$country)
+    out <- getgeojson(geo$country, encoding = "latin1")
 
     cat(paste0("__geovis_country__({\"geo\":", out, ","),
       file = file.path(pth, "countries.jsonp"))
@@ -43,7 +52,7 @@ geovis <- function(geo, path = NULL,
     idxs <- split(seq_along(geo$state), geo$state@data$country_code)
     for (ctry in names(idxs)) {
       # out <- as.character(geojson::as.geojson(geo$state[idxs[[ctry]], ]))
-      out <- getgeojson(geo$state[idxs[[ctry]], ])
+      out <- getgeojson(geo$state[idxs[[ctry]], ], encoding = "latin1")
       cat(paste0("__geovis_state__({\"geo\":", out, ","),
         file = file.path(pth, paste0(ctry, ".jsonp")))
     }
@@ -167,6 +176,84 @@ geovis <- function(geo, path = NULL,
     for (f in ff)
       cat("\"data\":{})", file = f, append = TRUE)
   }
+
+  var_names <- unique(c(
+    names(country_data),
+    names(state_data),
+    names(muni_data)
+  ))
+  var_names <- setdiff(var_names,
+    c("country_code", "state_code", "muni_code"))
+
+  if (is.null(var_info))
+    var_info <- list()
+
+  for (nm in var_names) {
+    cur <- var_info[[nm]]
+    if (is.null(cur))
+      cur <- list()
+
+    if (is.null(cur$name))
+      cur$name <- nm
+
+    curdat <- c(
+      country_data[[nm]],
+      state_data[[nm]],
+      muni_data[[nm]]
+    )
+
+    # TODO: for now, enforce equal breaks
+    if (is.null(cur$breaks))
+      cur$breaks <- pretty(curdat)
+
+    cur$range <- range(curdat, na.rm = TRUE)
+
+    var_info[[nm]] <- cur
+  }
+
+  if (is.null(default_var) || !default_var %in% var_names)
+    default_var <- setdiff(var_names, "year")[1]
+
+  tmp <- geo$state@data[, c("country_code", "state_code")]
+  state_codes <- split(tmp$state_code, tmp$country_code)
+
+  years <- seq(
+    var_info$year$range[1],
+    var_info$year$range[2])
+
+  # TODO: if view_level is 'country' or 'state'
+  # check to see if view_country_code or view_state_code are set and in geo data
+
+  config <- list(
+    name = name,
+    countries = as.list(geo$country$country_code),
+    defaultViewMode = list(
+      mode = "geo",
+      level = view_level,
+      code = list(
+        country = view_country_code,
+        state = view_state_code
+      )
+    ),
+    defaultXVar = "year",
+    defaultYVar = default_var,
+    defaultIndex = length(years) - 1,
+    mapStyle = map_style,
+    states = state_codes,
+    seqLen = length(years),
+    years = years,
+    variables = var_info
+  )
+
+  cfg <- jsonlite::toJSON(config,
+    auto_unbox = TRUE,
+    pretty = TRUE)
+
+  cat(paste0("__geovis_config__(", cfg, ")"),
+    file = file.path(path, "config.jsonp"))
+
+  geovis_widget(width = width, height = height,
+    www_dir = path)
 }
 
 check_data <- function(dat, datname, varnames, geo) {
@@ -195,7 +282,7 @@ check_data <- function(dat, datname, varnames, geo) {
   dat
 }
 
-getgeojson <- function(x) {
+getgeojson <- function(x, encoding = "utf-8") {
   tf <- tempfile()
   x@proj4string <- sp::CRS()
   rgdal::writeOGR(
@@ -204,7 +291,7 @@ getgeojson <- function(x) {
     layer = "",
     driver = "GeoJSON",
     layer_options = "COORDINATE_PRECISION=4",
-    encoding = "latin1"
+    encoding = encoding
   )
   paste(readLines(tf), collapse = "")
 }
