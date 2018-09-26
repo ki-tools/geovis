@@ -6,7 +6,7 @@ function px(x) {
 }
 
 HTMLWidgets.widget({
-  name: 'geovis',
+  name: 'geovis_widget',
   type: 'output',
   factory: function(el, width, height) {
     // TODO: define shared variables for this instance
@@ -20,9 +20,11 @@ HTMLWidgets.widget({
           el.style.marginBottom = '30px';
         }
 
-        var scrpt = document.createElement('script');
-        scrpt.text= "(function() { geovisApp('" + x.id + "', " + width + ", " + height + "); })();";
-        el.appendChild(scrpt);
+        geovisApp(x.id, width, height);
+
+        // var scrpt = document.createElement('script');
+        // scrpt.text= "(function() { geovisApp('" + x.id + "', " + width + ", " + height + "); })();";
+        // el.appendChild(scrpt);
       },
 
       resize: function(width, height) {
