@@ -268,9 +268,9 @@ check_data <- function(dat, datname, varnames, geo) {
         call. = FALSE)
 
     uc <- unique(dat[[varname]])
-    if (! all(uc %in% geo[[varname]])) 
-      stop("There are '", varname, "' values in country_data that ",
-        "aren't found in the geographic data.",
+    if (! all(uc %in% geo[[varname]]))
+      stop("There are '", varname, "' values in ", datname, 
+        " that aren't found in the geographic data.",
         call. = FALSE)
   }
 

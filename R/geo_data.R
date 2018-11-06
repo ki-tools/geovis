@@ -27,11 +27,11 @@ get_geo_data <- function(countries,
   if (get_munis) {
     mdat <- lapply(countries, function(x) {
       if (tolower(x) == "brazil") {
-        if (!requireNamespace("brazilmunis", quietly = TRUE))
-          stop("Package 'brazilmunis' is needed for Brazil municipality data. ",
+        if (!requireNamespace("brazilgeo", quietly = TRUE))
+          stop("Package 'brazilgeo' is needed for Brazil municipality data. ",
           "Please install it.",
           call. = FALSE)
-        return (brazilmunis::brazil_munis)
+        return (brazilgeo::br_muni_geo)
       } else {
         message("No municipality geo data for ", x)
       }

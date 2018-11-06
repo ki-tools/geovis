@@ -16,7 +16,7 @@ Imports: htmlwidgets,
     rnaturalearthdata,
     rnaturalearthhires
 RoxygenNote: 6.1.0
-Suggests: brazilmunis
+Suggests: brazilgeo
 Remotes:
-    ki-tools/brazilmunis,
+    ki-tools/brazilgeo,
     ropensci/rnaturalearthhires
