@@ -1,6 +1,6 @@
 dependencies:
 - name: geovis-lib
-  version: 0.0.1
+  version: 0.0.2
   src: htmlwidgets/lib/geovis_widget
   script: geovis.min.js
   stylesheet: geovis.min.css

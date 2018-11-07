@@ -15,13 +15,13 @@ get_geo_data <- function(countries,
   res$country <- rnaturalearth::ne_countries(
     country = countries, scale = scale)
   res$country <- res$country[, c("name", "adm0_a3")]
-  names(res$country) <- c("name", "country_code")
+  names(res$country) <- c("country_name", "country_code")
 
   if (get_states) {
     res$state <- rnaturalearth::ne_states(
       country = countries)
     res$state <- res$state[, c("name", "adm0_a3", "adm1_code")]
-    names(res$state) <- c("name", "country_code", "state_code")
+    names(res$state) <- c("state_name", "country_code", "state_code")
   }
 
   if (get_munis) {

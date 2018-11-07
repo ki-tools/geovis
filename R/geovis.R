@@ -206,7 +206,8 @@ geovis <- function(geo, name = "", path = NULL,
     if (is.null(cur$breaks))
       cur$breaks <- pretty(curdat)
 
-    cur$range <- range(curdat, na.rm = TRUE)
+    if (is.null(cur$range))
+      cur$range <- range(curdat, na.rm = TRUE)
 
     var_info[[nm]] <- cur
   }
