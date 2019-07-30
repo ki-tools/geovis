@@ -32,6 +32,12 @@ get_geo_data <- function(countries,
           "Please install it.",
           call. = FALSE)
         return (brazilgeo::br_muni_geo)
+      } else if (tolower(x) == 'united states of america') {
+        if (!requireNamespace("USAboundaries", quietly = TRUE))
+          stop("Package 'USAboundaries' is needed for USA municipality data. ",
+               "Please install it.",
+               call. = FALSE)
+        return (sf:::as_Spatial(USAboundaries::us_counties()))
       } else {
         message("No municipality geo data for ", x)
       }
